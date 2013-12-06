@@ -18,8 +18,10 @@ namespace FROGGER
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Texture2D square;
+        Square square;
+        Texture2D SQUARE;
         Texture2D rectanglesprite;
+        public Vector2 target;
 
         public Game1()
         {
@@ -48,10 +50,10 @@ namespace FROGGER
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             rectanglesprite = Content.Load<Texture2D>("rectangle");
-            
+            SQUARE = Content.Load<Texture2D>("square");
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            square = Content.Load<Texture2D>("square");
-          
+            square = new Square(new Vector2(390, 430), SQUARE, new Rectangle(0, 0, 50, 50), Vector2.Zero);
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -75,10 +77,9 @@ namespace FROGGER
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
-            // TODO: Add your update logic here
-
             base.Update(gameTime);
+            square.Update(gameTime);
+            
         }
 
         /// <summary>
@@ -88,11 +89,10 @@ namespace FROGGER
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-
-            spriteBatch.Draw(square, new Vector2(390, 430), Color.White);
+            square.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }
