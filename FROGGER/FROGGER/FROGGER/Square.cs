@@ -14,8 +14,7 @@ namespace FROGGER
 {
     class Square : Sprite
     {
-       
-        public Vector2 target;
+
         public Square(
             Vector2 location,
             Texture2D texture,
@@ -24,6 +23,7 @@ namespace FROGGER
             
             base(location, texture, initialframe, velocity)
         {
+ 
         }
         public override void  Update(GameTime gameTime)
         {
@@ -31,19 +31,19 @@ namespace FROGGER
 
             if (keyboard.IsKeyDown(Keys.Right))
             {
-                target = new Vector2(25, 0);
+                this.location.X += 25;
             }
             if (keyboard.IsKeyDown(Keys.Left))
             {
-                target = new Vector2(-25, 0);               
+                this.location.X += -25;                            
             }
             if (keyboard.IsKeyDown(Keys.Down))
             {
-                target = new Vector2(0, 25);                
+                this.location.Y += 25;                                
             }
             if (keyboard.IsKeyDown(Keys.Up))
             {
-                target = new Vector2(0, -25);  
+                this.location.Y += -25;                  
             }
         }
               public override void Draw(SpriteBatch spriteBatch)
