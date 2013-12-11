@@ -23,6 +23,7 @@ namespace FROGGER
         Texture2D rectanglesprite;
         public Vector2 target;
 
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -52,8 +53,11 @@ namespace FROGGER
             rectanglesprite = Content.Load<Texture2D>("rectangle");
             SQUARE = Content.Load<Texture2D>("square");
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            square = new Square(new Vector2(390, 430), SQUARE, new Rectangle(0, 0, 50, 50), Vector2.Zero);
-
+            square = new Square(new Vector2(390, 550), SQUARE, new Rectangle(0, 0, 50, 50), Vector2.Zero);
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.ApplyChanges();
 
             // TODO: use this.Content to load your game content here
         }
@@ -77,8 +81,9 @@ namespace FROGGER
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            base.Update(gameTime);
             square.Update(gameTime);
+            base.Update(gameTime);
+            
             
         }
 
@@ -88,13 +93,14 @@ namespace FROGGER
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Yellow);
             
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             square.Draw(spriteBatch);
-            spriteBatch.End();
             base.Draw(gameTime);
+            spriteBatch.End();
+            
         }
     }
 }
