@@ -14,6 +14,8 @@ namespace FROGGER
 {
     class Square : Sprite
     {
+       bool KeyDown = false;
+        Keys Key = Keys.None;
         Vector2 newlocation;
         public Square(
             Vector2 location,
@@ -27,28 +29,47 @@ namespace FROGGER
         }
         public override void  Update(GameTime gameTime)
         {
-            KeyboardState keyboard = Keyboard.GetState();
+            KeyboardState kb = Keyboard.GetState();
 
-            if (keyboard.IsKeyDown(Keys.Right))
+            DetectKeyPress(kb, Keys.Right);
+            DetectKeyPress(kb, Keys.Left);
+            DetectKeyPress(kb, Keys.Up);
+            DetectKeyPress(kb, Keys.Down);
+
+            if (KeyDown)
             {
-                this.location.X += 50;
-                newlocation = this.location;
+                if (kb.IsKeyUp(Key))
+                {
+                    switch (Key)
+                    {
+                        case Keys.Right:
+                            {
+                                this.location.X += 50;
+                                break;
+                            }
+                        case Keys.Left:
+                            {
+                                this.location.X += -50;
+                                break;
+                            }
+                        case Keys.Up:
+                            {
+                                this.location.Y += -50;
+                                break;
+                            }
+                        case Keys.Down:
+                            {
+                                this.location.Y += 50;
+                                break;
+                            }
+                    }
+                    KeyDown = false;
+                    Key = Keys.None;
+                }
             }
-            if (keyboard.IsKeyDown(Keys.Left))
-            {
-                this.location.X += -50;
-                newlocation = this.location;           
-            }
-            if (keyboard.IsKeyDown(Keys.Down))
-            {
-                this.location.Y += 50;
-                newlocation = this.location;               
-            }
-            if (keyboard.IsKeyDown(Keys.Up))
-            {
-                this.location.Y += -50;
-                newlocation = this.location;
-            }
+
+            
+            //To check if it is in the window.
             if (this.location.X >= 800)
             {
                 this.location.X = 750;
@@ -57,7 +78,7 @@ namespace FROGGER
             {
                 this.location.X = 0;
             }
-            if (this.location.Y <= 0)
+            if (this.location.Y < 0)
             {
                 this.location.X = 400;
                 this.location.Y = 600;
@@ -68,8 +89,17 @@ namespace FROGGER
             }
             base.Update(gameTime);
         }
-        
-              public override void Draw(SpriteBatch spriteBatch)
+       
+        protected void DetectKeyPress(KeyboardState kb, Keys key)
+        {
+            if (kb.IsKeyDown(key))
+            {
+                Key = key;
+                KeyDown = true;
+            }
+        }
+             
+        public override void Draw(SpriteBatch spriteBatch)
             {
             base.Draw(spriteBatch);
             }

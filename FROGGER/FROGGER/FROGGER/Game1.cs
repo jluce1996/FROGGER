@@ -19,6 +19,7 @@ namespace FROGGER
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Square square;
+        List<RECTANGLE> rectangles;
         Texture2D SQUARE;
         Texture2D rectanglesprite;
         public Vector2 target;
@@ -52,8 +53,21 @@ namespace FROGGER
             // Create a new SpriteBatch, which can be used to draw textures.
             rectanglesprite = Content.Load<Texture2D>("rectangle");
             SQUARE = Content.Load<Texture2D>("square");
+            rectanglesprite = Content.Load<Texture2D>("rectangle");
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            square = new Square(new Vector2(390, 550), SQUARE, new Rectangle(0, 0, 50, 50), Vector2.Zero);
+
+            rectangles = new List<RECTANGLE>();
+
+            for (int x = 0; x < 4; x++)
+            {
+                rectangles.Add(new RECTANGLE(new Vector2(800 + x * 250, 450), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-50, 0)));
+                rectangles.Add(new RECTANGLE(new Vector2(-200 - x * 250, 300), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(50, 0)));
+                rectangles.Add(new RECTANGLE(new Vector2(800 + x * 250, 150), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-50, 0)));
+            }
+            
+          
+            
+              square = new Square(new Vector2(390, 550), SQUARE, new Rectangle(0, 0, 50, 50), Vector2.Zero);
             graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 800;
             graphics.PreferredBackBufferHeight = 600;
@@ -83,8 +97,12 @@ namespace FROGGER
                 this.Exit();
             square.Update(gameTime);
             base.Update(gameTime);
-            
-            
+
+            for (int i = 0; i < rectangles.Count; i++)
+            {
+                rectangles[i].Update(gameTime);
+            }
+             
         }
 
         /// <summary>
@@ -98,6 +116,11 @@ namespace FROGGER
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             square.Draw(spriteBatch);
+
+            for (int i = 0; i < rectangles.Count; i++)
+            {
+                rectangles[i].Draw(spriteBatch);
+            }
             base.Draw(gameTime);
             spriteBatch.End();
             
