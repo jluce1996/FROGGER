@@ -27,7 +27,7 @@ namespace FROGGER
         {
             newlocation = this.location;
         }
-        public override void  Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             KeyboardState kb = Keyboard.GetState();
 
@@ -68,7 +68,6 @@ namespace FROGGER
                 }
             }
 
-            
             //To check if it is in the window.
             if (this.location.X >= 800)
             {

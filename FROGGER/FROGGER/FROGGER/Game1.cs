@@ -24,13 +24,11 @@ namespace FROGGER
         Texture2D rectanglesprite;
         public Vector2 target;
 
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
-
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -44,10 +42,7 @@ namespace FROGGER
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -60,20 +55,17 @@ namespace FROGGER
 
             for (int x = 0; x < 4; x++)
             {
-                rectangles.Add(new RECTANGLE(new Vector2(800 + x * 250, 450), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-50, 0)));
-                rectangles.Add(new RECTANGLE(new Vector2(-200 - x * 250, 300), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(50, 0)));
-                rectangles.Add(new RECTANGLE(new Vector2(800 + x * 250, 150), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-50, 0)));
+                rectangles.Add(new RECTANGLE(new Vector2(400 + x * 250, 450), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-50, 0)));
+                rectangles.Add(new RECTANGLE(new Vector2(200 - x * 250, 300), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(50, 0)));
+                rectangles.Add(new RECTANGLE(new Vector2(400 + x * 250, 150), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-50, 0)));
             }
-            
-          
-            
-              square = new Square(new Vector2(390, 550), SQUARE, new Rectangle(0, 0, 50, 50), Vector2.Zero);
+
+            square = new Square(new Vector2(390, 550), SQUARE, new Rectangle(0, 0, 50, 50), Vector2.Zero);
             graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 800;
             graphics.PreferredBackBufferHeight = 600;
             graphics.ApplyChanges();
 
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -92,38 +84,41 @@ namespace FROGGER
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            for (int i = 0; i < rectangles.Count; i++)
+            {
+                if(square.IsCircleColliding(rectangles[i].Center, rectangles[i].CollisionRadius))
+                {
+                    square.Location = new Vector2(390, 550);
+                }
+
+            }
+            
+            
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             square.Update(gameTime);
             base.Update(gameTime);
-
             for (int i = 0; i < rectangles.Count; i++)
             {
-                rectangles[i].Update(gameTime);
+                rectangles[i].Update(gameTime);                
             }
-             
         }
-
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Yellow);
-            
-            // TODO: Add your drawing code here
+            GraphicsDevice.Clear(Color.Yellow);            
             spriteBatch.Begin();
             square.Draw(spriteBatch);
-
             for (int i = 0; i < rectangles.Count; i++)
             {
                 rectangles[i].Draw(spriteBatch);
             }
             base.Draw(gameTime);
-            spriteBatch.End();
-            
+            spriteBatch.End();            
         }
     }
 }
