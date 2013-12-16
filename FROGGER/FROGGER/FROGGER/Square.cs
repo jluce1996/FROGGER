@@ -17,6 +17,9 @@ namespace FROGGER
        bool KeyDown = false;
         Keys Key = Keys.None;
         Vector2 newlocation;
+
+        public EventHandler OnWin;
+ 
         public Square(
             Vector2 location,
             Texture2D texture,
@@ -81,6 +84,9 @@ namespace FROGGER
             {
                 this.location.X = 400;
                 this.location.Y = 600;
+
+                if (OnWin != null)
+                    OnWin(this, null);
             }
             if (this.location.Y >= 600)
             {

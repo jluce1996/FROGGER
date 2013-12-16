@@ -27,6 +27,12 @@ namespace FROGGER
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.ApplyChanges();
+
+
             Content.RootDirectory = "Content";
         }
         /// <summary>
@@ -55,18 +61,31 @@ namespace FROGGER
 
             for (int x = 0; x < 4; x++)
             {
-                rectangles.Add(new RECTANGLE(new Vector2(400 + x * 250, 450), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-50, 0)));
-                rectangles.Add(new RECTANGLE(new Vector2(200 - x * 250, 300), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(50, 0)));
-                rectangles.Add(new RECTANGLE(new Vector2(400 + x * 250, 150), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-50, 0)));
+                rectangles.Add(new RECTANGLE(new Vector2(400 + x * 300, 450), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-100, 0)));
+                rectangles.Add(new RECTANGLE(new Vector2(200 - x * 300, 300), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(100, 0)));
+                rectangles.Add(new RECTANGLE(new Vector2(400 + x * 300, 150), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-100, 0)));
             }
 
             square = new Square(new Vector2(390, 550), SQUARE, new Rectangle(0, 0, 50, 50), Vector2.Zero);
-            graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
-            graphics.ApplyChanges();
+            square.OnWin += new EventHandler(this.OnWin);
 
         }
+
+        private void OnWin(object sender, EventArgs e)
+        {
+            for (int i = 0; i < rectangles.Count; i++)
+            {
+                if (rectangles[i].Velocity.X < 0)
+                {
+                    rectangles[i].Velocity += new Vector2(-20, 0);
+                }
+                if (rectangles[i].Velocity.X > 0)
+                {
+                    rectangles[i].Velocity += new Vector2(20, 0);
+                }
+            }
+        }
+
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -86,23 +105,30 @@ namespace FROGGER
         {
             for (int i = 0; i < rectangles.Count; i++)
             {
-                if(square.IsCircleColliding(rectangles[i].Center, rectangles[i].CollisionRadius))
+                if(square.IsBoxColliding(rectangles[i].BoundingBoxRect))
                 {
                     square.Location = new Vector2(390, 550);
                 }
+                if (rectangles[i].Location.X > this.Window.ClientBounds.Width && rectangles[i].Velocity.X > 0)
+                {
+                    rectangles[i].Location = new Vector2(-400, rectangles[i].Location.Y);
+                }
+                if (rectangles[i].Location.X < -150 && rectangles[i].Velocity.X < 0)
+                {
+                    rectangles[i].Location = new Vector2(1050, rectangles[i].Location.Y);
+                }
 
+            rectangles[i].Update(gameTime);       
             }
-            
-            
+
+          
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             square.Update(gameTime);
             base.Update(gameTime);
-            for (int i = 0; i < rectangles.Count; i++)
-            {
-                rectangles[i].Update(gameTime);                
-            }
+          
         }
         /// <summary>
         /// This is called when the game should draw itself.
