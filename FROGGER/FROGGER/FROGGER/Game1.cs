@@ -22,8 +22,7 @@ namespace FROGGER
         List<RECTANGLE> rectangles;
         Texture2D SQUARE;
         Texture2D rectanglesprite;
-        public Vector2 target;
-
+        SpriteFont Pericles14;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -56,14 +55,14 @@ namespace FROGGER
             SQUARE = Content.Load<Texture2D>("square");
             rectanglesprite = Content.Load<Texture2D>("rectangle");
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             rectangles = new List<RECTANGLE>();
+            Pericles14 = Content.Load<SpriteFont>(@"Pericles14.spritefont");
 
             for (int x = 0; x < 4; x++)
             {
-                rectangles.Add(new RECTANGLE(new Vector2(400 + x * 300, 450), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-100, 0)));
-                rectangles.Add(new RECTANGLE(new Vector2(200 - x * 300, 300), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(100, 0)));
-                rectangles.Add(new RECTANGLE(new Vector2(400 + x * 300, 150), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-100, 0)));
+                rectangles.Add(new RECTANGLE(new Vector2(400 + x * 300, 450), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-120, 0)));
+                rectangles.Add(new RECTANGLE(new Vector2(200 - x * 300, 300), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(120, 0)));
+                rectangles.Add(new RECTANGLE(new Vector2(400 + x * 300, 150), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-120, 0)));
             }
 
             square = new Square(new Vector2(390, 550), SQUARE, new Rectangle(0, 0, 50, 50), Vector2.Zero);
@@ -77,11 +76,11 @@ namespace FROGGER
             {
                 if (rectangles[i].Velocity.X < 0)
                 {
-                    rectangles[i].Velocity += new Vector2(-20, 0);
+                    rectangles[i].Velocity += new Vector2(-40, 0);
                 }
                 if (rectangles[i].Velocity.X > 0)
                 {
-                    rectangles[i].Velocity += new Vector2(20, 0);
+                    rectangles[i].Velocity += new Vector2(40, 0);
                 }
             }
         }
@@ -136,13 +135,14 @@ namespace FROGGER
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Yellow);            
+            GraphicsDevice.Clear(Color.Black);            
             spriteBatch.Begin();
             square.Draw(spriteBatch);
             for (int i = 0; i < rectangles.Count; i++)
             {
                 rectangles[i].Draw(spriteBatch);
             }
+            spriteBatch.DrawString(Pericles14,"Score:" + square.PlayerScore.ToString(), new Vector2(500, 20), Color.White);
             base.Draw(gameTime);
             spriteBatch.End();            
         }

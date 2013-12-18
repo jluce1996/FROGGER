@@ -17,6 +17,8 @@ namespace FROGGER
        bool KeyDown = false;
         Keys Key = Keys.None;
         Vector2 newlocation;
+        private long playerscore = 0;
+
 
         public EventHandler OnWin;
  
@@ -30,6 +32,19 @@ namespace FROGGER
         {
             newlocation = this.location;
         }
+
+        public long PlayerScore
+        {
+            get
+            {
+                return playerscore;
+            }
+            set
+            {
+               playerscore = value;
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             KeyboardState kb = Keyboard.GetState();
@@ -58,6 +73,7 @@ namespace FROGGER
                         case Keys.Up:
                             {
                                 this.location.Y += -50;
+                                playerscore += 100;
                                 break;
                             }
                         case Keys.Down:
@@ -107,6 +123,8 @@ namespace FROGGER
         public override void Draw(SpriteBatch spriteBatch)
             {
             base.Draw(spriteBatch);
+            
             }
-    }
-}
+        }
+  }
+
