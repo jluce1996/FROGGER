@@ -16,14 +16,20 @@ namespace FROGGER
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        enum GameStates { TitleScreen, Playing, PlayerDead, GameOver };
+        GameStates gameState = GameStates.TitleScreen;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Square square;
         List<RECTANGLE> rectangles;
         Texture2D SQUARE;
+        Texture2D titlescreen;
         Texture2D rectanglesprite;
-        SpriteFont Pericles14;
+        SpriteFont font;
+        int lives = 3;
+
         public Game1()
+        
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.IsFullScreen = false;
@@ -56,7 +62,8 @@ namespace FROGGER
             rectanglesprite = Content.Load<Texture2D>("rectangle");
             spriteBatch = new SpriteBatch(GraphicsDevice);
             rectangles = new List<RECTANGLE>();
-            Pericles14 = Content.Load<SpriteFont>(@"Pericles14.spritefont");
+            font = Content.Load<SpriteFont>("SpriteFont1");
+            titlescreen = Content.Load<Texture2D>(@"titlescreen");
 
             for (int x = 0; x < 4; x++)
             {
@@ -67,7 +74,6 @@ namespace FROGGER
 
             square = new Square(new Vector2(390, 550), SQUARE, new Rectangle(0, 0, 50, 50), Vector2.Zero);
             square.OnWin += new EventHandler(this.OnWin);
-
         }
 
         private void OnWin(object sender, EventArgs e)
@@ -83,6 +89,13 @@ namespace FROGGER
                     rectangles[i].Velocity += new Vector2(40, 0);
                 }
             }
+        }
+
+        private void resetGame()
+        {
+            square.Location = new Vector2(390, 550);
+            lives = 3;
+            square.PlayerScore = 0;
         }
 
 
@@ -102,32 +115,70 @@ namespace FROGGER
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            for (int i = 0; i < rectangles.Count; i++)
+            switch (gameState)
             {
-                if(square.IsBoxColliding(rectangles[i].BoundingBoxRect))
-                {
-                    square.Location = new Vector2(390, 550);
-                }
-                if (rectangles[i].Location.X > this.Window.ClientBounds.Width && rectangles[i].Velocity.X > 0)
-                {
-                    rectangles[i].Location = new Vector2(-400, rectangles[i].Location.Y);
-                }
-                if (rectangles[i].Location.X < -150 && rectangles[i].Velocity.X < 0)
-                {
-                    rectangles[i].Location = new Vector2(1050, rectangles[i].Location.Y);
-                }
+                case GameStates.TitleScreen:
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    {
+                        gameState = GameStates.Playing;
+                        resetGame();
+                    }
+                    break;
+                case GameStates.Playing:
+                    {
+                        for (int i = 0; i < rectangles.Count; i++)
+                        {
+                            if (square.IsBoxColliding(rectangles[i].BoundingBoxRect))
+                            {
+                                square.Location = new Vector2(390, 550);
+                                square.PlayerScore = square.PlayerScore - 100;
+                                lives = lives - 1;
+                                gameState = GameStates.PlayerDead;
+                            }
+                            if (rectangles[i].Location.X > this.Window.ClientBounds.Width && rectangles[i].Velocity.X > 0)
+                            {
+                                rectangles[i].Location = new Vector2(-400, rectangles[i].Location.Y);
+                            }
+                            if (rectangles[i].Location.X < -150 && rectangles[i].Velocity.X < 0)
+                            {
+                                rectangles[i].Location = new Vector2(1050, rectangles[i].Location.Y);
+                            }
 
-            rectangles[i].Update(gameTime);       
+                            rectangles[i].Update(gameTime);
+                        }
+                        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                            this.Exit();
+                        square.Update(gameTime);
+                        base.Update(gameTime);
+                        if (lives == 0)
+                        {
+                            gameState = GameStates.GameOver;
+                        }
+                        else
+                        {
+                            gameState = GameStates.Playing;
+                        }
+                    }
+                    break;
+                case GameStates.PlayerDead:
+                    {
+                        square.Update(gameTime);
+                        base.Update(gameTime);
+                        resetGame();
+                    }
+                    break;
+                case GameStates.GameOver:
+                    {
+                        base.Update(gameTime);
+                        square.Update(gameTime);
+                        for (int i = 0; i < rectangles.Count; i++)
+                        {
+                            rectangles[i].Update(gameTime);
+                        }
+                        gameState = GameStates.TitleScreen; 
+                    }
+                    break;
             }
-
-          
-
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-            square.Update(gameTime);
-            base.Update(gameTime);
-          
         }
         /// <summary>
         /// This is called when the game should draw itself.
@@ -135,16 +186,41 @@ namespace FROGGER
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);            
-            spriteBatch.Begin();
-            square.Draw(spriteBatch);
-            for (int i = 0; i < rectangles.Count; i++)
+            GraphicsDevice.Clear(Color.Black);
+            if (gameState == GameStates.TitleScreen)
             {
-                rectangles[i].Draw(spriteBatch);
+                spriteBatch.Begin();
+                spriteBatch.Draw(titlescreen, new Rectangle(0, 0, this.Window.ClientBounds.Width,
+                    this.Window.ClientBounds.Height),
+                    Color.White);
+                spriteBatch.End();
+
             }
-            spriteBatch.DrawString(Pericles14,"Score:" + square.PlayerScore.ToString(), new Vector2(500, 20), Color.White);
-            base.Draw(gameTime);
-            spriteBatch.End();            
+            if ((gameState == GameStates.Playing) ||
+                (gameState == GameStates.PlayerDead) ||
+                (gameState == GameStates.GameOver))
+            {
+                spriteBatch.Begin();
+                square.Draw(spriteBatch);
+                for (int i = 0; i < rectangles.Count; i++)
+                {
+                    rectangles[i].Draw(spriteBatch);
+                }
+                spriteBatch.DrawString(font, "Lives:" + lives.ToString(), new Vector2(20, 20), Color.White);
+                spriteBatch.DrawString(font, "Score:" + square.PlayerScore.ToString(), new Vector2(500, 20), Color.White);
+                base.Draw(gameTime);
+                spriteBatch.End();
+            }
+            if (gameState == GameStates.GameOver)
+            {
+                spriteBatch.Begin();
+                spriteBatch.DrawString(font,
+                    " G A M E  O V E R!!!",
+                    new Vector2(400, 40),
+                    Color.Yellow);
+                        spriteBatch.End();
+                    }
+            }
         }
     }
-}
+

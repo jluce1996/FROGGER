@@ -52,7 +52,6 @@ namespace FROGGER
             DetectKeyPress(kb, Keys.Right);
             DetectKeyPress(kb, Keys.Left);
             DetectKeyPress(kb, Keys.Up);
-            DetectKeyPress(kb, Keys.Down);
 
             if (KeyDown)
             {
@@ -74,11 +73,6 @@ namespace FROGGER
                             {
                                 this.location.Y += -50;
                                 playerscore += 100;
-                                break;
-                            }
-                        case Keys.Down:
-                            {
-                                this.location.Y += 50;
                                 break;
                             }
                     }
