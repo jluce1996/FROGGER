@@ -27,6 +27,7 @@ namespace FROGGER
         Texture2D rectanglesprite;
         SpriteFont font;
         int lives = 3;
+        int level = 1;
 
         public Game1()
         
@@ -72,7 +73,7 @@ namespace FROGGER
                 rectangles.Add(new RECTANGLE(new Vector2(400 + x * 300, 150), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-120, 0)));
             }
 
-            square = new Square(new Vector2(390, 550), SQUARE, new Rectangle(0, 0, 50, 50), Vector2.Zero);
+            square = new Square(new Vector2(370, 550), SQUARE, new Rectangle(0, 0, 50, 50), Vector2.Zero);
             square.OnWin += new EventHandler(this.OnWin);
         }
 
@@ -87,15 +88,25 @@ namespace FROGGER
                 if (rectangles[i].Velocity.X > 0)
                 {
                     rectangles[i].Velocity += new Vector2(40, 0);
-                }
+                }     
             }
+            level = level + 1;
         }
 
         private void resetGame()
         {
-            square.Location = new Vector2(390, 550);
+            square.Location = new Vector2(370, 550);      
             lives = 3;
+            level = 1;
             square.PlayerScore = 0;
+
+            int wtf = 0;
+            for (int x = 0; x < 4; x++)
+            {
+                rectangles[wtf++].Velocity = new Vector2( -120, 0);
+                rectangles[wtf++].Velocity = new Vector2(120, 0);
+                rectangles[wtf++].Velocity = new Vector2(-120, 0);
+            }
         }
 
 
@@ -164,7 +175,6 @@ namespace FROGGER
                     {
                         square.Update(gameTime);
                         base.Update(gameTime);
-                        resetGame();
                     }
                     break;
                 case GameStates.GameOver:
@@ -175,7 +185,8 @@ namespace FROGGER
                         {
                             rectangles[i].Update(gameTime);
                         }
-                        gameState = GameStates.TitleScreen; 
+                        gameState = GameStates.TitleScreen;
+                        resetGame();
                     }
                     break;
             }
@@ -207,7 +218,8 @@ namespace FROGGER
                     rectangles[i].Draw(spriteBatch);
                 }
                 spriteBatch.DrawString(font, "Lives:" + lives.ToString(), new Vector2(20, 20), Color.White);
-                spriteBatch.DrawString(font, "Score:" + square.PlayerScore.ToString(), new Vector2(500, 20), Color.White);
+                spriteBatch.DrawString(font, "Score:" + square.PlayerScore.ToString(), new Vector2(600, 20), Color.White);
+                spriteBatch.DrawString(font, "Level  " + level.ToString(), new Vector2(320, 20), Color.Orange);
                 base.Draw(gameTime);
                 spriteBatch.End();
             }
@@ -216,7 +228,7 @@ namespace FROGGER
                 spriteBatch.Begin();
                 spriteBatch.DrawString(font,
                     " G A M E  O V E R!!!",
-                    new Vector2(400, 40),
+                    new Vector2(200, 40),
                     Color.Yellow);
                         spriteBatch.End();
                     }
