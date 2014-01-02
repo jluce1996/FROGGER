@@ -26,6 +26,7 @@ namespace FROGGER
         Texture2D titlescreen;
         Texture2D rectanglesprite;
         SpriteFont font;
+        SoundEffect ThemeSong;
         int lives = 3;
         int level = 1;
 
@@ -65,6 +66,10 @@ namespace FROGGER
             rectangles = new List<RECTANGLE>();
             font = Content.Load<SpriteFont>("SpriteFont1");
             titlescreen = Content.Load<Texture2D>(@"titlescreen");
+            ThemeSong = Content.Load<SoundEffect>("Music//ThemeSong");
+            SoundEffectInstance ThemeSongLoop = ThemeSong.CreateInstance();
+            ThemeSongLoop.IsLooped = true;
+            ThemeSongLoop.Play();
 
             for (int x = 0; x < 4; x++)
             {
@@ -109,6 +114,9 @@ namespace FROGGER
             }
         }
 
+
+        //Load music here
+        
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
