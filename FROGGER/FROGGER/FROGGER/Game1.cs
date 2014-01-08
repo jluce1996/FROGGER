@@ -47,7 +47,7 @@ namespace FROGGER
         /// This is where it can query for any required services and load any non-graphic
         /// related content.  Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
-        /// </summary>
+        /// </summary>C:\Users\EAHSCS\Documents\GitHub\FROGGER\FROGGER\FROGGER\FROGGER\Rectangle.cs
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
@@ -70,7 +70,7 @@ namespace FROGGER
             SoundEffectInstance ThemeSongLoop = ThemeSong.CreateInstance();
             ThemeSongLoop.IsLooped = true;
             ThemeSongLoop.Play();
-
+           
             for (int x = 0; x < 4; x++)
             {
                 rectangles.Add(new RECTANGLE(new Vector2(400 + x * 300, 450), rectanglesprite, new Rectangle(0, 0, 150, 50), new Vector2(-120, 0)));
