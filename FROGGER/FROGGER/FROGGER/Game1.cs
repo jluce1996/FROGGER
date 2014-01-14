@@ -152,6 +152,7 @@ namespace FROGGER
                                 square.Location = new Vector2(390, 550);
                                 square.PlayerScore = square.PlayerScore - 100;
                                 lives = lives - 1;
+                                square.State = SquareState.DYING;
                                 gameState = GameStates.PlayerDead;
                             }
                             if (rectangles[i].Location.X > this.Window.ClientBounds.Width && rectangles[i].Velocity.X > 0)
