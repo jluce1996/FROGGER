@@ -29,6 +29,7 @@ namespace FROGGER
         SoundEffect ThemeSong;
         int lives = 3;
         int level = 1;
+        double deathtime = 999, deathTimer = 0;
 
         public Game1()
         
@@ -147,9 +148,9 @@ namespace FROGGER
                     {
                         for (int i = 0; i < rectangles.Count; i++)
                         {
-                            if (square.IsBoxColliding(rectangles[i].BoundingBoxRect))
+                            if (square.IsBoxColliding(rectangles[i].BoundingBoxRect) && square.State == SquareState.LIVING)
                             {
-                                square.Location = new Vector2(390, 550);
+                                
                                 square.PlayerScore = square.PlayerScore - 100;
                                 lives = lives - 1;
                                 square.State = SquareState.DYING;
@@ -188,14 +189,21 @@ namespace FROGGER
                     break;
                 case GameStates.GameOver:
                     {
-                        base.Update(gameTime);
-                        square.Update(gameTime);
                         for (int i = 0; i < rectangles.Count; i++)
+                            {
+                                rectangles[i].Update(gameTime);
+                            }
+                        base.Update(gameTime);
+                            square.Update(gameTime);
+                        deathTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+                        if (deathTimer > deathtime)
                         {
-                            rectangles[i].Update(gameTime);
+                            gameState = GameStates.TitleScreen;
+                            
+                            
+                            gameState = GameStates.TitleScreen;
+                            resetGame();
                         }
-                        gameState = GameStates.TitleScreen;
-                        resetGame();
                     }
                     break;
             }
@@ -221,11 +229,12 @@ namespace FROGGER
                 (gameState == GameStates.GameOver))
             {
                 spriteBatch.Begin();
-                square.Draw(spriteBatch);
+                
                 for (int i = 0; i < rectangles.Count; i++)
                 {
                     rectangles[i].Draw(spriteBatch);
                 }
+                square.Draw(spriteBatch);
                 spriteBatch.DrawString(font, "Lives:" + lives.ToString(), new Vector2(20, 20), Color.White);
                 spriteBatch.DrawString(font, "Score:" + square.PlayerScore.ToString(), new Vector2(600, 20), Color.White);
                 spriteBatch.DrawString(font, "Level  " + level.ToString(), new Vector2(320, 20), Color.Orange);
@@ -234,10 +243,11 @@ namespace FROGGER
             }
             if (gameState == GameStates.GameOver)
             {
+
                 spriteBatch.Begin();
                 spriteBatch.DrawString(font,
                     " G A M E  O V E R!!!",
-                    new Vector2(200, 40),
+                    new Vector2(200, 250),
                     Color.Yellow);
                         spriteBatch.End();
                     }

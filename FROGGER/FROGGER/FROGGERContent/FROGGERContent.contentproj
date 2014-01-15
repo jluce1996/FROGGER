@@ -42,13 +42,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="pink square.jpg">
-      <Name>square</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="rectangle.jpg">
       <Name>rectangle</Name>
       <Importer>TextureImporter</Importer>
@@ -79,6 +72,13 @@
   <ItemGroup>
     <Compile Include="11954356601633557489ryanlerch_skull_and_crossbones.svg.hi.png">
       <Name>11954356601633557489ryanlerch_skull_and_crossbones.svg.hi</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="pink square.png">
+      <Name>square</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

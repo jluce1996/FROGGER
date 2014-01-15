@@ -16,7 +16,7 @@ namespace FROGGER
 
     class Square : Sprite
     {
-
+        double deathTime = 1000, deathTimer = 0;
        bool KeyDown = false;
         Keys Key = Keys.None;
         Vector2 newlocation;
@@ -117,8 +117,14 @@ namespace FROGGER
 
                 case SquareState.DYING:
 
+                    deathTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-
+                    if (deathTimer > deathTime)
+                    {
+                        deathTimer = 0;
+                        Location = new Vector2(390, 550);
+                        State = SquareState.LIVING;
+                    }
 
                     break;
             }
@@ -152,7 +158,7 @@ namespace FROGGER
                         spriteBatch.Draw(
                           Texture,
                           Center,
-                          new Rectangle(50, 0, 50, 50),
+                          new Rectangle(51, 0, 50, 50),
                           this.TintColor,
                           this.Rotation,
                           new Vector2(this.BoundingBoxRect.Width / 2, this.BoundingBoxRect.Height / 2),
